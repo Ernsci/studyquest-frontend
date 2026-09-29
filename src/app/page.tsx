@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { learning } from "@/config/app-config";
-import { publicEnv } from "@/config/env";
 import { api } from "@/lib/api/endpoints";
 import { percent } from "@/lib/utils";
 
@@ -13,7 +12,6 @@ import { percent } from "@/lib/utils";
 export default async function HomePage() {
   const [metaResult, subjectsResult] = await Promise.all([api.meta(), api.subjects()]);
 
-  const contentMode = metaResult.ok ? metaResult.data.demo.contentMode : "unknown";
   const passMark = metaResult.ok
     ? Math.round(metaResult.data.learning.passMark * 100)
     : Math.round(learning.passMark * 100);
@@ -24,7 +22,7 @@ export default async function HomePage() {
         <div className="stagger space-y-6">
           <span className="chip">
             <span aria-hidden className="pulse-dot" />
-            Catalogue served live · {contentMode}
+            Learn a little every day
           </span>
 
           <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
@@ -32,24 +30,20 @@ export default async function HomePage() {
           </h1>
 
           <p className="max-w-2xl text-lg leading-8 text-[rgb(var(--text-muted))]">
-            Short lessons, real practice and honest feedback. The catalogue below is served by the
-            StudyQuest API ({publicEnv.apiUrl || "API URL not set"}).
+            Short lessons, real practice and clear feedback to help you build skills one step at a
+            time.
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
             <Link className="btn btn-primary" href="/auth/signup">
               Start your first quest
             </Link>
-            <a className="btn btn-ghost" href="#subjects">
-              Browse the catalogue
-            </a>
+            {subjectsResult.ok ? (
+              <a className="btn btn-ghost" href="#subjects">Browse the catalogue</a>
+            ) : null}
           </div>
 
           <dl className="flex flex-wrap gap-3 text-sm">
-            <div className="chip">
-              <dt className="text-[rgb(var(--text-muted))]">Content source</dt>
-              <dd className="font-semibold">{contentMode}</dd>
-            </div>
             <div className="chip">
               <dt className="text-[rgb(var(--text-muted))]">Pass mark</dt>
               <dd className="font-semibold">{passMark}%</dd>
@@ -63,17 +57,7 @@ export default async function HomePage() {
           subjects={subjectsResult.data.subjects}
           progress={subjectsResult.data.progress}
         />
-      ) : (
-        <section className="card animate-rise p-6" role="alert">
-          <p className="kicker">Connection problem</p>
-          <h2 className="mt-2 text-xl font-semibold">We could not load the catalogue</h2>
-          <p className="muted mt-2 text-sm">{subjectsResult.error.message}</p>
-          <p className="muted mt-2 break-all text-xs">
-            API: {publicEnv.apiUrl || "NEXT_PUBLIC_API_URL is not set"} · code:{" "}
-            {subjectsResult.error.code}
-          </p>
-        </section>
-      )}
+      ) : null}
     </div>
   );
 }
