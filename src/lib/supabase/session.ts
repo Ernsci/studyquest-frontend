@@ -17,6 +17,13 @@ import { isSupabaseConfigured, publicEnv } from "@/config/env";
 
 export const DEMO_TOKEN_COOKIE = "sq_demo_token";
 
+function safeNextPath(value: string | null): string {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
+    return "/";
+  }
+  return value;
+}
+
 const DEMO_ACCOUNT = "demo-learner";
 const DEMO_TOKEN_MAX_AGE = 60 * 60 * 24 * 30;
 
@@ -116,7 +123,7 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
 
   if (user && (pathname === "/auth/login" || pathname === "/auth/signup")) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard";
+    redirectUrl.pathname = safeNextPath(request.nextUrl.searchParams.get("next"));
     redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
   }
