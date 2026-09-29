@@ -78,7 +78,7 @@ export const site = {
 /* ------------------------------------------------------------------ 2. theme */
 export const theme = {
   /** Default for first-time visitors: light | dark | system. */
-  defaultMode: "system" as ThemeMode,
+  defaultMode: "dark" as ThemeMode,
   /** Show the light/dark toggle in the header. */
   toggleEnabled: true,
   colors: {
@@ -108,9 +108,14 @@ export const theme = {
     },
   },
   fonts: {
-    /** System-first stacks: no external font request, works offline, CSP friendly. */
-    sans: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
+    /**
+     * Fallback stacks only — the primary families (Bricolage Grotesque, Instrument
+     * Sans, JetBrains Mono) are self-hosted by next/font in `src/app/layout.tsx`,
+     * so there is no runtime font request and the CSP stays clean.
+     */
+    sans: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    display: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+    mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
   },
 } as const;
 

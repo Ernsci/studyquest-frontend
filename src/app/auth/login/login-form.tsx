@@ -44,11 +44,11 @@ function Form() {
   const configured = browserCanUseSupabase();
 
   return (
-    <section className="card w-full p-6 shadow-sm sm:p-8">
-      <div className="mb-7 space-y-2">
-        <p className="text-sm font-semibold text-brand-600">Welcome back</p>
-        <h2 className="text-2xl font-bold">Sign in to StudyQuest</h2>
-        <p className="muted text-sm">Use the email and password associated with your account.</p>
+    <section className="card animate-rise w-full p-6 shadow-[0_28px_60px_-36px_rgb(0_0_0/0.5)] sm:p-8">
+      <div className="stagger mb-7">
+        <p className="kicker">Welcome back</p>
+        <h2 className="mt-2 text-2xl font-bold">Sign in to StudyQuest</h2>
+        <p className="muted mt-1.5 text-sm">Use the email and password associated with your account.</p>
       </div>
 
       {!configured ? (
@@ -61,10 +61,11 @@ function Form() {
             <label className="text-sm font-medium" htmlFor="email">Email</label>
             <input
               autoComplete="email"
-              className="surface w-full rounded-lg border px-3 py-2.5 text-sm"
+              className="input"
               id="email"
               name="email"
               onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
               required
               type="email"
               value={email}
@@ -74,18 +75,19 @@ function Form() {
             <label className="text-sm font-medium" htmlFor="password">Password</label>
             <input
               autoComplete="current-password"
-              className="surface w-full rounded-lg border px-3 py-2.5 text-sm"
+              className="input"
               id="password"
               name="password"
               onChange={(event) => setPassword(event.target.value)}
+              placeholder="••••••••"
               required
               type="password"
               value={password}
             />
           </div>
-          {error ? <p className="text-sm text-red-700" role="alert">{error}</p> : null}
+          {error ? <p className="form-error" role="alert">{error}</p> : null}
           <button
-            className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-wait disabled:opacity-60"
+            className="btn btn-primary w-full"
             disabled={busy}
             type="submit"
           >
@@ -95,12 +97,27 @@ function Form() {
       )}
 
       <p className="muted mt-6 text-center text-sm">
-        New to StudyQuest? <Link className="font-semibold text-brand-600 hover:underline" href="/auth/signup">Create an account</Link>
+        New to StudyQuest?{" "}
+        <Link className="link-underline font-semibold text-brand-600 dark:text-brand-300" href="/auth/signup">
+          Create an account
+        </Link>
       </p>
     </section>
   );
 }
 
 export function LoginForm() {
-  return <Suspense fallback={<div className="card min-h-80 animate-pulse" aria-label="Loading sign in form" />}><Form /></Suspense>;
+  return (
+    <Suspense
+      fallback={
+        <div
+          aria-label="Loading sign in form"
+          className="card animate-shimmer min-h-80 w-full rounded-2xl"
+          role="status"
+        />
+      }
+    >
+      <Form />
+    </Suspense>
+  );
 }
