@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { api } from "@/lib/api/endpoints";
+import { JavaExercises } from "./java-exercises";
 
 type Props = { params: Promise<{ subjectSlug: string; lessonSlug: string }> };
 
@@ -46,6 +47,8 @@ export default async function LessonPage({ params }: Props) {
       {lesson.objectives.length ? <section className="card p-5"><h2 className="font-semibold">By the end, you can</h2><ul className="muted mt-3 list-inside list-disc space-y-2 text-sm">{lesson.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ul></section> : null}
 
       {lesson.codeExamples.map((example) => <section className="card overflow-hidden" key={example.label}><div className="border-b px-4 py-3 text-sm font-semibold">{example.label}</div><pre className="overflow-x-auto bg-[rgb(var(--code-surface))] p-4 text-sm leading-6"><code>{example.code}</code></pre>{example.explanation ? <p className="muted p-4 text-sm leading-6">{example.explanation}</p> : null}</section>)}
+
+      {lesson.subjectSlug === "java" ? <JavaExercises lessonSlug={lesson.slug} /> : null}
 
       {questions.length ? <section className="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="font-semibold">Ready to check your understanding?</h2><p className="muted mt-1 text-sm">Try {questions.length} question{questions.length === 1 ? "" : "s"} from this lesson.</p></div><Link className="btn btn-primary shrink-0" href={practiceHref}>Start practice</Link></section> : null}
 
