@@ -5,7 +5,8 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { SiteNav } from "@/components/site-nav";
 import { navigation, site, theme } from "@/config/app-config";
-import { isDemoModeEnabled, publicEnv } from "@/config/env";
+import { isDemoModeEnabled, isSupabaseConfigured, publicEnv } from "@/config/env";
+import { createSupabaseServer } from "@/lib/supabase/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -71,9 +72,19 @@ const themeScript = `(function(){try{var stored=localStorage.getItem("sq-theme")
   theme.defaultMode,
 )};var mode=stored==="light"||stored==="dark"?stored:fallback;if(mode==="system"){mode=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",mode==="dark")}catch(error){document.documentElement.classList.add("dark")}})();`;
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  let signedIn = false;
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await createSupabaseServer();
+      const { data } = await supabase.auth.getUser();
+      signedIn = Boolean(data.user);
+    } catch {
+      signedIn = false;
+    }
+  }
   const navItems = navigation.primary
-    .filter((item) => !item.authRequired)
+    .filter((item) => !item.authRequired || signedIn)
     .map((item) => ({ label: item.label, href: item.href }));
 
   return (
@@ -100,7 +111,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span className="text-[1.05rem] font-bold tracking-tight">{site.name}</span>
             </Link>
 
-            <SiteNav items={navItems} showThemeToggle={theme.toggleEnabled} />
+            <SiteNav items={navItems} showSignIn={!signedIn} showThemeToggle={theme.toggleEnabled} />
           </div>
         </header>
 

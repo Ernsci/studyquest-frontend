@@ -68,7 +68,7 @@ export const site = {
         links: [
           { label: "How StudyQuest works", href: "/about" },
           { label: "Security notes", href: "/about#security" },
-          { label: "Report a problem", href: "/dashboard#reports" },
+          { label: "Security & privacy", href: "/about#security" },
         ],
       },
     ],
@@ -167,6 +167,7 @@ export const navigation = {
     { label: "Subjects", href: "/subjects" },
     { label: "Practice", href: "/practice", feature: "quizzes" },
     { label: "Playground", href: "/playground", feature: "playground" },
+    { label: "About", href: "/about" },
     { label: "Review", href: "/review", feature: "spacedReview", authRequired: true },
     { label: "Dashboard", href: "/dashboard", authRequired: true },
   ] satisfies NavItem[],
@@ -192,6 +193,7 @@ export const subjectCatalog = [
   { slug: "python", title: "Python", enabled: true, sample: true },
   { slug: "sql", title: "SQL & Databases", enabled: true, sample: true },
   { slug: "web-security", title: "Web Security Basics", enabled: true, sample: true },
+  { slug: "java", title: "Java", enabled: true, sample: true },
   { slug: "data-structures", title: "Data Structures", enabled: false, sample: false },
 ] as const;
 
