@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: `src/components/theme-provider.tsx` toggles `.dark`
+   on <html> (the attribute form is reserved for the pre-paint inline script). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme colours come from src/config/app-config.ts -> theme.colors, mirrored
+   into CSS custom properties by src/app/layout.tsx so both stay configurable. */
+@theme inline {
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+}
+
+:root {
+  --surface: 250 250 250;
+  --surface-raised: 255 255 255;
+  --surface-sunken: 244 245 247;
+  --text: 23 25 30;
+  --text-muted: 92 99 114;
+  --line: 224 227 233;
+  --focus: var(--brand-600);
+  --brand-tint: var(--brand-50);
+  --code-surface: 246 247 250;
+}
+
+.dark {
+  --surface: 16 18 23;
+  --surface-raised: 25 28 35;
+  --surface-sunken: 12 14 18;
+  --text: 232 235 241;
+  --text-muted: 150 158 176;
+  --line: 43 48 59;
+  --focus: var(--brand-400);
+  --brand-tint: 22 27 40;
+  --code-surface: 18 21 27;
+}
+
+@layer base {
+  * {
+    border-color: rgb(var(--line));
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: rgb(var(--surface));
+    color: rgb(var(--text));
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  ::selection {
+    background: var(--brand-200);
+    color: var(--brand-900);
+  }
+}
+
+@layer components {
+  .surface {
+    background-color: rgb(var(--surface-raised));
+  }
+  .sunken {
+    background-color: rgb(var(--surface-sunken));
+  }
+  .muted {
+    color: rgb(var(--text-muted));
+  }
+  .card {
+    background-color: rgb(var(--surface-raised));
+    border: 1px solid rgb(var(--line));
+    border-radius: 0.875rem;
+  }
+  .skip-link {
+    position: absolute;
+    left: 0.75rem;
+    top: -4rem;
+    z-index: 60;
+    padding: 0.6rem 1rem;
+    border-radius: 0 0 0.6rem 0.6rem;
+    background: var(--brand-600);
+    color: #fff;
+    transition: top 120ms ease;
+  }
+  .skip-link:focus {
+    top: 0;
+  }
+  /* Prose: lesson body typography (kept local instead of @tailwindcss/typography). */
+  .prose-lesson {
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  .prose-lesson > * + * {
+    margin-top: 1.1rem;
+  }
+  .prose-lesson h2 {
+    font-size: 1.4rem;
+    margin-top: 2.25rem;
+    scroll-margin-top: 6rem;
+  }
+  .prose-lesson h3 {
+    font-size: 1.13rem;
+    margin-top: 1.75rem;
+    scroll-margin-top: 6rem;
+  }
+  .prose-lesson p {
+    color: rgb(var(--text));
+  }
+  .prose-lesson ul,
+  .prose-lesson ol {
+    padding-left: 1.35rem;
+  }
+  .prose-lesson ul {
+    list-style: disc;
+  }
+  .prose-lesson ol {
+    list-style: decimal;
+  }
+  .prose-lesson li + li {
+    margin-top: 0.4rem;
+  }
+  .prose-lesson a {
+    color: var(--brand-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  .prose-lesson a:hover {
+    color: var(--brand-700);
+  }
+  .prose-lesson :not(pre) > code {
+    background: rgb(var(--code-surface));
+    border: 1px solid rgb(var(--line));
+    border-radius: 0.35rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.86em;
+  }
+  .prose-lesson blockquote {
+    border-left: 3px solid var(--brand-500);
+    background: var(--brand-tint);
+    padding: 0.85rem 1.1rem;
+    border-radius: 0 0.6rem 0.6rem 0;
+    font-size: 0.95rem;
+  }
+  .prose-lesson table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose-lesson th,
+  .prose-lesson td {
+    border: 1px solid rgb(var(--line));
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+  }
+  .prose-lesson th {
+    background: rgb(var(--surface-sunken));
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 220ms ease-out both;
+  }
+  .animate-rise {
+    animation: rise 260ms ease-out both;
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
