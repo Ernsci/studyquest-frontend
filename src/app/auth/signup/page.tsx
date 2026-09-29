@@ -21,6 +21,7 @@ function SignupForm() {
     setError("");
     setMessage("");
     setBusy(true);
+    let redirecting = false;
     try {
       const { data, error: authError } = await getBrowserSupabase().auth.signUp({
         email: email.trim(),
@@ -28,6 +29,7 @@ function SignupForm() {
       });
       if (authError) throw authError;
       if (data.session) {
+        redirecting = true;
         const next = params.get("next");
         const destination = next?.startsWith("/") && !next.startsWith("//") && !next.includes("\\") ? next : "/";
         router.replace(destination);
@@ -38,7 +40,7 @@ function SignupForm() {
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Account creation failed. Please try again.");
     } finally {
-      setBusy(false);
+      if (!redirecting) setBusy(false);
     }
   }
 
@@ -56,12 +58,13 @@ function SignupForm() {
           Account creation is unavailable because Supabase is not configured.
         </p>
       ) : (
-        <form className="space-y-4" onSubmit={submit}>
+        <form aria-busy={busy} className="space-y-4" onSubmit={submit}>
           <div className="space-y-1.5">
             <label className="text-sm font-medium" htmlFor="signup-email">Email</label>
             <input
               autoComplete="email"
               className="input"
+              disabled={busy}
               id="signup-email"
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
@@ -75,6 +78,7 @@ function SignupForm() {
             <input
               autoComplete="new-password"
               className="input"
+              disabled={busy}
               id="signup-password"
               minLength={8}
               onChange={(event) => setPassword(event.target.value)}
@@ -87,9 +91,10 @@ function SignupForm() {
           </div>
           {error ? <p className="form-error" role="alert">{error}</p> : null}
           {message ? <p className="form-success" role="status">{message}</p> : null}
-          <button className="btn btn-primary w-full" disabled={busy} type="submit">
-            {busy ? "Creating account…" : "Create account"}
+          <button className="btn btn-primary flex w-full items-center justify-center gap-2" disabled={busy} type="submit">
+            {busy ? <><svg aria-hidden="true" className="size-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" d="M4 12a8 8 0 0 1 8-8" stroke="currentColor" strokeLinecap="round" strokeWidth="4" /></svg><span>Creating account...</span></> : "Create account"}
           </button>
+          {busy ? <p aria-live="polite" className="muted text-center text-sm" role="status">Creating your account and preparing your learning space...</p> : null}
         </form>
       )}
       <p className="muted mt-6 text-center text-sm">

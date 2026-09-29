@@ -26,18 +26,20 @@ function Form() {
     event.preventDefault();
     setError("");
     setBusy(true);
+    let redirecting = false;
     try {
       const { error: authError } = await getBrowserSupabase().auth.signInWithPassword({
         email: email.trim(),
         password,
       });
       if (authError) throw authError;
+      redirecting = true;
       router.replace(safeNextPath(searchParams.get("next")));
       router.refresh();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Sign in failed. Please try again.");
     } finally {
-      setBusy(false);
+      if (!redirecting) setBusy(false);
     }
   }
 
@@ -56,12 +58,13 @@ function Form() {
           Sign-in is unavailable because Supabase is not configured. Add the public Supabase URL and anon key to the frontend environment, then redeploy.
         </p>
       ) : (
-        <form className="space-y-4" onSubmit={submit}>
+        <form aria-busy={busy} className="space-y-4" onSubmit={submit}>
           <div className="space-y-1.5">
             <label className="text-sm font-medium" htmlFor="email">Email</label>
             <input
               autoComplete="email"
               className="input"
+              disabled={busy}
               id="email"
               name="email"
               onChange={(event) => setEmail(event.target.value)}
@@ -76,6 +79,7 @@ function Form() {
             <input
               autoComplete="current-password"
               className="input"
+              disabled={busy}
               id="password"
               name="password"
               onChange={(event) => setPassword(event.target.value)}
@@ -87,12 +91,13 @@ function Form() {
           </div>
           {error ? <p className="form-error" role="alert">{error}</p> : null}
           <button
-            className="btn btn-primary w-full"
+            className="btn btn-primary flex w-full items-center justify-center gap-2"
             disabled={busy}
             type="submit"
           >
-            {busy ? "Signing in…" : "Sign in"}
+            {busy ? <><svg aria-hidden="true" className="size-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" d="M4 12a8 8 0 0 1 8-8" stroke="currentColor" strokeLinecap="round" strokeWidth="4" /></svg><span>Signing in…</span></> : "Sign in"}
           </button>
+          {busy ? <p aria-live="polite" className="muted text-center text-sm" role="status">Checking your account and opening your learning space...</p> : null}
         </form>
       )}
 

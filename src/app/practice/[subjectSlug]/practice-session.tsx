@@ -21,19 +21,24 @@ export function PracticeSession({ session, token, lessonSlug, sessionMode }: { s
   async function submit() {
     setBusy(true);
     setError("");
-    const response = await apiFetch<PracticeSubmitResponse>("/api/practice/submit", {
-      method: "POST",
-      token,
-      body: {
-        mode: lessonSlug ? "lesson" : sessionMode === "practice" ? "practice" : "quiz",
-        subjectSlug: session.subject.slug,
-        ...(lessonSlug ? { lessonSlug } : {}),
-        answers: session.questions.map((question) => ({ questionId: question.id, answer: answers[question.id] ?? null })),
-      },
-    });
-    if (response.ok) setResult(response.data);
-    else setError(response.error.message);
-    setBusy(false);
+    try {
+      const response = await apiFetch<PracticeSubmitResponse>("/api/practice/submit", {
+        method: "POST",
+        token,
+        body: {
+          mode: lessonSlug ? "lesson" : sessionMode === "practice" ? "practice" : "quiz",
+          subjectSlug: session.subject.slug,
+          ...(lessonSlug ? { lessonSlug } : {}),
+          answers: session.questions.map((question) => ({ questionId: question.id, answer: answers[question.id] ?? null })),
+        },
+      });
+      if (response.ok) setResult(response.data);
+      else setError(response.error.message);
+    } catch {
+      setError("We couldn't submit your answers. Check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return <div className="mx-auto max-w-3xl space-y-7">
@@ -43,7 +48,7 @@ export function PracticeSession({ session, token, lessonSlug, sessionMode }: { s
         {question.kind === "short_answer" || question.kind === "code" ? <textarea aria-label={`Answer ${index + 1}`} className="surface min-h-24 w-full rounded-lg border p-3 text-sm" onChange={(event) => choose(question.id, event.target.value)} placeholder={question.kind === "code" ? "Write your answer…" : "Type your answer…"} /> : question.kind === "true_false" ? <div className="flex gap-3">{[true, false].map((value) => <label className="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-3 text-sm hover:bg-[rgb(var(--surface-sunken))]" key={String(value)}><input checked={answers[question.id] === value} className="accent-[var(--brand-600)]" name={question.id} onChange={() => choose(question.id, value)} type="radio" />{value ? "True" : "False"}</label>)}</div> : <div className="space-y-2">{question.options.map((option, optionIndex) => <label className="flex cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm hover:bg-[rgb(var(--surface-sunken))]" key={`${question.id}-${optionIndex}`}><input checked={question.kind === "multiple" ? Array.isArray(answers[question.id]) && (answers[question.id] as number[]).includes(optionIndex) : answers[question.id] === optionIndex} className="mt-0.5 accent-[var(--brand-600)]" name={question.id} onChange={(event) => { if (question.kind === "multiple") { const previous = Array.isArray(answers[question.id]) ? answers[question.id] as number[] : []; choose(question.id, event.target.checked ? [...previous, optionIndex] : previous.filter((item) => item !== optionIndex)); } else choose(question.id, optionIndex); }} type={question.kind === "multiple" ? "checkbox" : "radio"} /><span>{option}</span></label>)}</div>}
       </fieldset></li>)}</ol>
       {error ? <p className="text-sm text-red-700" role="alert">{error}</p> : null}
-      {!token ? <p className="card muted p-4 text-sm" role="status">Sign in to submit practice and save your score.</p> : <button className="btn btn-primary" disabled={busy} onClick={submit} type="button">{busy ? "Checking your answers…" : "Submit answers"}</button>}
+      {!token ? <p className="card muted p-4 text-sm" role="status">Sign in to submit practice and save your score.</p> : <><button aria-busy={busy} className="btn btn-primary inline-flex items-center justify-center gap-2" disabled={busy} onClick={submit} type="button">{busy ? <><svg aria-hidden="true" className="size-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" d="M4 12a8 8 0 0 1 8-8" stroke="currentColor" strokeLinecap="round" strokeWidth="4" /></svg><span>Checking answers...</span></> : "Submit answers"}</button>{busy ? <p aria-live="polite" className="muted mt-2 text-sm" role="status">Grading your answers and saving your progress...</p> : null}</>}
     </>}
   </div>;
 }
