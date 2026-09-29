@@ -1,33 +1,33 @@
-# dependencies
+
 /node_modules
 /.pnp
 .pnp.*
 
-# next.js
+
 /.next/
 /out/
 next-env.d.ts
 
-# production
+
 /build
 
-# misc
+
 .DS_Store
 *.pem
 /install.log
 /install.err.log
 
-# debug / local
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vercel
 *.tsbuildinfo
 
-# env — never commit real credentials
+
 .env
 .env*.local
 !.env.example
 
-# typescript
+
 /coverage

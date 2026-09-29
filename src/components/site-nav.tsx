@@ -10,9 +10,9 @@ export type SiteNavItem = { label: string; href: string };
 
 type SiteNavProps = {
   items: SiteNavItem[];
-  /** The "Sign in" CTA is hidden on auth screens and when there is nothing to sign in to. */
+
   showSignIn?: boolean;
-  /** Wired to `theme.toggleEnabled` in app-config. */
+
   showThemeToggle?: boolean;
 };
 
@@ -21,10 +21,7 @@ function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/**
- * Header navigation: animated desktop links + a disclosure-based mobile menu.
- * Owns its keyboard behaviour (Escape closes) and closes on route change.
- */
+
 export function SiteNav({ items, showSignIn = true, showThemeToggle = true }: SiteNavProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);

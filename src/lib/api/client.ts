@@ -1,13 +1,6 @@
 import { apiBase } from "@/config/env";
 
-/**
- * Isomorphic HTTP client for the StudyQuest API.
- *
- * Every screen goes through this so that one place decides how the bearer token
- * is attached, how failures are shaped and how long a request may take. Nothing
- * throws: callers get `{ ok: true, data }` or `{ ok: false, error }` and must
- * render the error — a blank screen is never an acceptable outcome.
- */
+
 
 export type ApiErrorBody = {
   code: string;
@@ -34,7 +27,7 @@ export class ApiRequestError extends Error {
 export type ApiRequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
-  /** Supabase access token, or a `demo.<userId>` token while demo mode is on. */
+
   token?: string | null;
   cache?: RequestCache;
   timeoutMs?: number;
@@ -108,7 +101,7 @@ export async function apiFetch<T>(
   }
 }
 
-/** Message for the first field the API rejected — used next to form inputs. */
+
 export function fieldError(
   error: ApiErrorBody,
   field: string,

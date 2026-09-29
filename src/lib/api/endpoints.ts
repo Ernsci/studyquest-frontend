@@ -17,10 +17,7 @@ import type {
   SubjectSummary,
 } from "@/lib/types";
 
-/**
- * Typed endpoints. Screens import these instead of hand-writing paths, so a
- * route rename is a single edit and every response is typed.
- */
+
 
 export type ApiMeta = {
   site: { name: string; shortName: string; tagline: string; locale: string };
@@ -83,7 +80,7 @@ export type BookmarkToggleResponse = { bookmarked: boolean; lessonSlug: string; 
 
 export type ReviewResponse = { items: SavedQuestion[]; questions: Question[] };
 
-/** Only admins receive these: they contain the answer key. */
+
 export type AdminContentResponse = {
   subjects: Array<SubjectSummary & { updatedAt: string }>;
   lessons: unknown[];
@@ -117,7 +114,7 @@ export type PracticeSubmitResponse = {
 
 export type SessionState = { signedIn: boolean; profile: Profile | null; demo?: boolean };
 
-/* ------------------------------------------------------------ server helpers */
+
 
 const withToken = async <T,>(
   path: string,

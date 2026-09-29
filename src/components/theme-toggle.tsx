@@ -1,10 +1,6 @@
 "use client";
 
-/**
- * Light/dark switch. The `.dark` class lives on <html> (set before first paint by
- * the inline script in `src/app/layout.tsx`); the icon swap itself is pure CSS so
- * there is no hydration flash. The choice is persisted under `sq-theme`.
- */
+
 export function ThemeToggle() {
   function toggle() {
     const next = document.documentElement.classList.contains("dark") ? "light" : "dark";

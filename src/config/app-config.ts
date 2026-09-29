@@ -1,22 +1,8 @@
-/**
- * ============================================================================
- * StudyQuest — central application configuration
- * ============================================================================
- * This is the single place to change the app's identity, theme, navigation,
- * enabled subjects, feature flags and learning rules. Values here are safe to
- * read from both server and browser code.
- *
- * Secrets never live here. Anything private belongs in environment variables
- * and is read only in `src/config/env.ts`.
- *
- * Contents: 1 site · 2 theme · 3 navigation+features · 4 subjects · 5 learning
- *           6 playground · 7 practice · 8 limits · 9 storage · helpers
- * ============================================================================
- */
+
 
 export type ThemeMode = "light" | "dark" | "system";
 
-/* ------------------------------------------------------------------- 1. site */
+
 export const site = {
   name: "StudyQuest",
   shortName: "SQ",
@@ -34,11 +20,11 @@ export const site = {
     "quizzes",
   ],
   logo: {
-    /** Rendered as an inline SVG mark (components/logo.tsx) — no binary asset needed. */
+
     mark: "quest",
     wordmark: "StudyQuest",
     alt: "StudyQuest home",
-    /** Emoji fallback; the favicon itself is generated in app/icon.tsx. */
+
     fallback: "📘",
   },
   footer: {
@@ -75,14 +61,14 @@ export const site = {
   },
 } as const;
 
-/* ------------------------------------------------------------------ 2. theme */
+
 export const theme = {
-  /** Default for first-time visitors: light | dark | system. */
+
   defaultMode: "dark" as ThemeMode,
-  /** Show the light/dark toggle in the header. */
+
   toggleEnabled: true,
   colors: {
-    /** Brand scale, exposed to Tailwind as `bg-brand-500`, `text-brand-600`, … */
+
     brand: {
       50: "#f2f1ff",
       100: "#e6e3ff",
@@ -95,7 +81,7 @@ export const theme = {
       800: "#3d2b88",
       900: "#2b1f61",
     },
-    /** Accent used for streaks, XP and highlights. */
+
     accent: {
       400: "#fbbf24",
       500: "#f59e0b",
@@ -108,44 +94,40 @@ export const theme = {
     },
   },
   fonts: {
-    /**
-     * Fallback stacks only — the primary families (Bricolage Grotesque, Instrument
-     * Sans, JetBrains Mono) are self-hosted by next/font in `src/app/layout.tsx`,
-     * so there is no runtime font request and the CSP stays clean.
-     */
+
     sans: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     display: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
     mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
   },
 } as const;
 
-/* ------------------------------------------------- 3. navigation + features */
+
 export const features = {
-  /** Light/dark toggle + persisted theme preference. */
+
   darkMode: true,
-  /** Consecutive-day streaks and the activity heatmap. */
+
   streaks: true,
-  /** Daily reminder time + email-verification nudge on the profile page. */
+
   studyReminders: true,
-  /** Inline code playground on lessons and /playground. */
+
   playground: true,
-  /** Quizzes and practice sessions. */
+
   quizzes: true,
-  /** Leitner-style spaced review for saved questions and missed answers. */
+
   spacedReview: true,
-  /** Bookmark lessons. */
+
   bookmarks: true,
-  /** Save practice questions to review later. */
+
   savedQuestions: true,
-  /** Learner feedback form. */
+
   feedback: true,
-  /** Learners can flag confusing or wrong content. */
+
   reports: true,
-  /** Personalised study plan + next-best-lesson recommendations. */
+
   recommendations: true,
-  /** Admin area (/admin). Access is ALSO enforced by server checks + RLS. */
+
   adminPanel: true,
-  /** In-memory sample content when Supabase is not configured, or as a toggle. */
+
   demoMode: true,
 } as const;
 
@@ -154,11 +136,11 @@ export type FeatureFlag = keyof typeof features;
 export type NavItem = {
   label: string;
   href: string;
-  /** Only shown to signed-in users. */
+
   authRequired?: boolean;
-  /** Only shown to users with one of these roles. */
+
   roles?: Array<"learner" | "admin">;
-  /** Requires this feature flag to be on. */
+
   feature?: FeatureFlag;
 };
 
@@ -171,7 +153,7 @@ export const navigation = {
     { label: "Review", href: "/review", feature: "spacedReview", authRequired: true },
     { label: "Dashboard", href: "/dashboard", authRequired: true },
   ] satisfies NavItem[],
-  /** Shown in the avatar menu on desktop, and at the end of the mobile menu. */
+
   account: [
     { label: "Dashboard", href: "/dashboard", authRequired: true },
     { label: "Bookmarks", href: "/bookmarks", feature: "bookmarks", authRequired: true },
@@ -180,13 +162,8 @@ export const navigation = {
   ] satisfies NavItem[],
 } as const;
 
-/* ---------------------------------------------------------------- 4. subjects */
-/**
- * Which subjects are enabled. Slugs must match `subjects.slug` in Supabase.
- * `enabled: false` hides a subject everywhere without deleting content.
- * `sample: true` marks subjects that ship with built-in sample lessons so the
- * app is fully usable before you add your own content.
- */
+
+
 export const subjectCatalog = [
   { slug: "javascript", title: "JavaScript", enabled: true, sample: true },
   { slug: "html-css", title: "HTML & CSS", enabled: true, sample: true },
@@ -198,91 +175,86 @@ export const subjectCatalog = [
 ] as const;
 
 export const subjects = {
-  /** Ordered slugs of enabled subjects (derived from `subjectCatalog`). */
+
   enabled: subjectCatalog.filter((s) => s.enabled).map((s) => s.slug),
   pageSize: 12,
 } as const;
 
-/* ---------------------------------------------------------------- 5. learning */
-/**
- * Display defaults only. The API (`backend/src/config/app-config.ts`) is the
- * authority for pass marks, XP and session sizes: it reads them from
- * `GET /api/meta` so a scoring change never needs a frontend redeploy. These
- * copies keep static pages rendering before the API answers.
- */
+
+
 export const learning = {
-  /** XP awarded for finishing a lesson. */
+
   xpPerLesson: 20,
-  /** XP awarded per correct practice answer. */
+
   xpPerCorrectAnswer: 5,
-  /** Bonus XP for passing a quiz. */
+
   quizPassBonus: 25,
-  /** Fraction of points needed to pass a quiz (0.7 = 70%). */
+
   passMark: 0.7,
-  /** Default daily target shown on the dashboard. */
+
   dailyGoalMinutes: 20,
-  /** Days rendered in the activity heatmap. */
+
   heatmapDays: 91,
   streak: {
     enabled: true,
-    /** Freeze tokens let a learner miss one day without losing the streak. */
+
     allowFreeze: true,
-    /** XP cost of one freeze token. */
+
     freezeXpCost: 150,
-    /** A streak of this length is described as "on fire". */
+
     onFireAt: 7,
   },
   spacedReview: {
-    /** Leitner intervals in days, indexed by review box (box 0 = review now). */
+
     intervalsDays: [0, 1, 3, 7, 21],
-    /** Automatically queue a missed practice question for review. */
+
     autoAddMissed: true,
-    /** Maximum items surfaced per review session. */
+
     sessionSize: 12,
   },
   plan: {
-    /** Days covered by the generated study plan. */
+
     horizonDays: 14,
-    /** Lessons suggested per week when the learner has set no weekly goal. */
+
     defaultLessonsPerWeek: 3,
   },
 } as const;
 
-/* -------------------------------------------------------------- 6. playground */
+
 export const playground = {
-  /** Only JavaScript runs, and only inside the browser. See components/code-runner.tsx. */
+
   language: "javascript",
-  /** Limits that keep the sandboxed runner from hanging the tab. */
+
   maxOutputLines: 200,
   maxRuntimeMs: 2000,
   maxSourceLength: 20000,
-  /** Inject a tiny console/date helper (no network, no DOM access). */
+
   enableConsoleShim: true,
 } as const;
 
-/* ---------------------------------------------------------------- 7. practice */
+
 export const practice = {
-  /** Questions per session, by mode. */
+
   sessionSizes: {
     quiz: 8,
     practice: 6,
     review: 12,
     lesson: 5,
   },
-  /** Hard cap on questions assembled for one attempt. */
+
   maxQuestions: 25,
-  /** Show the explanation right after each answer (false = reveal at the end). */
+
   explainAfterEachAnswer: true,
   shuffleOptions: true,
-  /** Score (0-1) at which a saved question counts as "mastered". */
+
   masteryScore: 0.85,
 } as const;
 
-/* -------------------------------------------------------------------- 8. limits */
+
 export const limits = {
   pageSize: 20,
   adminPageSize: 25,
-  /** Per-user (or per-IP) limits enforced by src/lib/rate-limit.ts. */
+
   rateLimits: {
     "practice.submit": { max: 30, windowMs: 10 * 60 * 1000 },
     "profile.update": { max: 20, windowMs: 10 * 60 * 1000 },
@@ -291,7 +263,7 @@ export const limits = {
     "account.delete": { max: 3, windowMs: 60 * 60 * 1000 },
     "admin.mutation": { max: 120, windowMs: 5 * 60 * 1000 },
   } satisfies Record<string, { max: number; windowMs: number }>,
-  /** Input lengths; mirrored by the zod schemas in src/lib/validation.ts. */
+
   input: {
     displayNameMin: 2,
     displayNameMax: 60,
@@ -309,15 +281,15 @@ export const limits = {
   },
 } as const;
 
-/* ------------------------------------------------------------------ 9. storage */
+
 export const storage = {
-  /** Public bucket for learner avatars (created by the SQL migration). */
+
   avatarBucket: "avatars",
   maxAvatarBytes: 512 * 1024,
   acceptedAvatarTypes: ["image/png", "image/jpeg", "image/webp"],
 } as const;
 
-/* ------------------------------------------------------------- helpers */
+
 export function isFeatureEnabled(flag: FeatureFlag): boolean {
   return features[flag] === true;
 }

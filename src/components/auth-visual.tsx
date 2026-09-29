@@ -8,11 +8,7 @@ type AuthVisualProps = {
   points: AuthVisualPoint[];
 };
 
-/**
- * Decorative side panel for the auth screens: aurora orbs, a display headline and
- * three value props. Pure presentational markup — no client hooks — so the server
- * renders it and only the form ships as client JS.
- */
+
 export function AuthVisual({ kicker, headline, headlineAccent, blurb, points }: AuthVisualProps) {
   return (
     <section className="relative isolate flex flex-col justify-between overflow-hidden rounded-3xl border border-[rgb(var(--line))] bg-[rgb(var(--surface-raised))] p-6 sm:p-8 lg:p-10">

@@ -23,8 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-/* Self-hosted via next/font: preloaded, size-adjusted fallbacks, no layout shift
-   and no third-party font request at runtime. */
+
 const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
@@ -41,10 +40,7 @@ const monoFont = JetBrains_Mono({
   variable: "--font-code",
 });
 
-/**
- * Brand scale and fallback stacks live in `config/app-config.ts`; globals.css reads
- * them through these custom properties, so changing the palette is a one-file edit.
- */
+
 const themeVariables = {
   "--brand-50": theme.colors.brand[50],
   "--brand-100": theme.colors.brand[100],
@@ -64,10 +60,7 @@ const themeVariables = {
   "--font-display-stack": `var(--font-heading), ${theme.fonts.display}`,
 } as CSSProperties;
 
-/**
- * Runs before first paint: applies the stored (or configured default) theme so a
- * dark-first site never flashes light. Mirrors `src/components/theme-toggle.tsx`.
- */
+
 const themeScript = `(function(){try{var stored=localStorage.getItem("sq-theme");var fallback=${JSON.stringify(
   theme.defaultMode,
 )};var mode=stored==="light"||stored==="dark"?stored:fallback;if(mode==="system"){mode=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",mode==="dark")}catch(error){document.documentElement.classList.add("dark")}})();`;

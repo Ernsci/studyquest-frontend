@@ -4,11 +4,7 @@ import { learning } from "@/config/app-config";
 import { api } from "@/lib/api/endpoints";
 import { percent } from "@/lib/utils";
 
-/**
- * Home page: proves the split works end to end — the catalogue below is fetched
- * from the API at request time (`/api/subjects`), and a failure is shown instead
- * of an empty page.
- */
+
 export default async function HomePage() {
   const [metaResult, subjectsResult] = await Promise.all([api.meta(), api.subjects()]);
 

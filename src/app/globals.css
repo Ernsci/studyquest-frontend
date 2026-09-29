@@ -1,12 +1,9 @@
 @import "tailwindcss";
 
-/* Class-based dark mode: a pre-paint script in `src/app/layout.tsx` sets `.dark`
-   on <html> before first paint (no flash), and `src/components/theme-toggle.tsx`
-   flips it afterwards. The attribute form is reserved for that script. */
+
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Theme colours come from src/config/app-config.ts -> theme.colors, mirrored
-   into CSS custom properties by src/app/layout.tsx so both stay configurable. */
+
 @theme inline {
   --color-brand-50: var(--brand-50);
   --color-brand-100: var(--brand-100);
@@ -92,7 +89,7 @@
     line-height: 1.6;
     overflow-x: clip;
   }
-  /* Fixed backdrop: brand/amber aurora over a faint grid that fades out. */
+
   body::before {
     content: "";
     position: fixed;
@@ -302,7 +299,7 @@
   .skip-link:focus {
     top: 0;
   }
-  /* Header navigation: animated gradient underline. */
+
   .nav-link {
     position: relative;
     border-radius: 0.4rem;
@@ -344,7 +341,7 @@
   .dark .link-underline:hover {
     color: var(--brand-300);
   }
-  /* Theme toggle: icons cross-fade + spin with the mode. */
+
   .theme-toggle {
     position: relative;
     display: grid;
@@ -392,7 +389,7 @@
     transform: rotate(90deg) scale(0.4);
     opacity: 0;
   }
-  /* Hamburger → X. */
+
   .menu-button {
     display: grid;
     width: 2.35rem;
@@ -420,7 +417,7 @@
   .menu-button[aria-expanded="true"] span:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
   }
-  /* Decorative blurred orbs (auth screens). */
+
   .orb {
     position: absolute;
     border-radius: 9999px;
@@ -459,7 +456,7 @@
     border: 2px solid color-mix(in srgb, var(--brand-500) 50%, transparent);
     animation: pulse-ring 2s ease-out infinite;
   }
-  /* Prose: lesson body typography (kept local instead of @tailwindcss/typography). */
+
   .prose-lesson {
     line-height: 1.75;
     font-size: 1rem;
@@ -568,7 +565,7 @@
     animation: grow-x 0.9s cubic-bezier(0.2, 0.8, 0.25, 1) both;
     animation-delay: var(--d, 120ms);
   }
-  /* Staggered entrance for server-rendered lists (no inline styles needed). */
+
   .stagger > * {
     animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.25, 1) both;
   }

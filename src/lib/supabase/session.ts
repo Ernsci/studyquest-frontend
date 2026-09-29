@@ -3,17 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 
 import { isSupabaseConfigured, publicEnv } from "@/config/env";
 
-/**
- * Session handling in the split architecture.
- *
- * Supabase owns the session cookie *on this origin only* (the frontend), which is
- * why no cross-site cookie is needed: pages render on the server and forward the
- * access token to the API as a bearer token. See `src/lib/api/server.ts`.
- *
- * While Supabase is not configured the API hands out a demo bearer token instead;
- * it is stored in an httpOnly cookie and stops working as soon as the API sees
- * Supabase configuration.
- */
+
 
 export const DEMO_TOKEN_COOKIE = "sq_demo_token";
 
@@ -27,7 +17,7 @@ function safeNextPath(value: string | null): string {
 const DEMO_ACCOUNT = "demo-learner";
 const DEMO_TOKEN_MAX_AGE = 60 * 60 * 24 * 30;
 
-/** Routes that must never bounce through the auth redirect loop. */
+
 const PUBLIC_ROUTE_PREFIXES = ["/auth", "/api/health", "/icon", "/favicon"];
 
 function isPublicRoute(pathname: string): boolean {
@@ -37,7 +27,7 @@ function isPublicRoute(pathname: string): boolean {
   );
 }
 
-/** Asks the API for a demo bearer token; returns null when the API is unreachable. */
+
 async function requestDemoToken(): Promise<string | null> {
   if (publicEnv.apiUrl.length === 0) return null;
   try {
@@ -106,7 +96,7 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     },
   });
 
-  // `getUser()` verifies the JWT with Supabase instead of trusting the cookie.
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

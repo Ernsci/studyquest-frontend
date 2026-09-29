@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
 
-/**
- * StudyQuest frontend configuration.
- *
- * The UI is served by Vercel while all data comes from the StudyQuest API, so the
- * CSP has to allow exactly one extra origin: the API. `NEXT_PUBLIC_API_URL` is
- * read at build time, which is why it must be set in the Vercel project before
- * the first deploy.
- */
+
 function apiOrigin(): string {
   const raw = (process.env.NEXT_PUBLIC_API_URL ?? "").trim();
   if (raw.length === 0) return "";
